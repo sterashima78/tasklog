@@ -17,3 +17,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+p {
+  @apply text-red-600;
+}
+
+</style>
