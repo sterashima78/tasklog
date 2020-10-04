@@ -1,4 +1,4 @@
-import Index from "./components/pages/index.vue"
+import Index from "./components/pages/Home/index.vue"
 export const routes = [
     {
         path: '/',
