@@ -1,14 +1,6 @@
 <template>
   <div>
-    <h1>Task log</h1>
-    <div>
-      <h2>Task setting</h2>
-      <input type="text" v-model="newTask" />
-      <button @click="addNewTask(newTask)">add</button>
-      <p v-for="task in tasks" :key="task.name" v-text="task.name" />
-    </div>
-    <hr />
-    <div v-text="date" />
+    <div v-text="dateString" />
     <button @click="prevDate">prev</button>
     <button @click="nextDate">next</button>
     <ul>
@@ -25,33 +17,41 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, PropType, ref, readonly } from "vue";
 import { fromDate, toString, Day, nextDay, prevDay } from "/@/domain/Day";
 import { fromNullable, map, getOrElse } from "fp-ts/Option";
 import { pipe } from "fp-ts/pipeable";
 import { useTask } from "/@/compositions/useTask";
 import { useTaskLog } from "/@/compositions/useTaskLog";
 import TSwitch from "/@/components/atoms/TSwitch/index.vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   components: {
     TSwitch,
   },
-  setup() {
-    const newTask = ref("");
-    const { tasks, addNewTask } = useTask();
-    const d = ref(fromDate(new Date()));
-    const date = computed(() => pipe(d.value, toString));
-    const { taskLogs, updateLog } = useTaskLog(tasks, d);
-    const prevDate = () => (d.value = pipe(d.value, prevDay));
-    const nextDate = () => (d.value = pipe(d.value, nextDay));
+  props: {
+    date: {
+      type: Object as PropType<Day>,
+      default: ()=> fromDate(new Date()),
+      required: true
+    }
+  },
+  setup(props) {
+    const router = useRouter()
+    const { tasks } = useTask();
+    const dateString = computed(() => pipe(props.date, toString));
+    const { taskLogs, updateLog } = useTaskLog(tasks, computed(()=> props.date));
+    const prevDate = () => {
+      const d = pipe(props.date, prevDay)
+      router.push(`/log/${d.y}-${d.m}-${d.d}`)
+    };
+    const nextDate = () => {
+      const d = pipe(props.date, nextDay)
+      router.push(`/log/${d.y}-${d.m}-${d.d}`)
+    };
     return {
-      addNewTask: (name: string) => {
-        addNewTask(name);
-        newTask.value = "";
-      },
-      newTask,
-      date,
       tasks,
+      dateString,
       prevDate,
       nextDate,
       taskLogs,

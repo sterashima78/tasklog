@@ -11,7 +11,7 @@ export type Task = {
 
 type AddTask = (tasks: Task[], name: string, type?: TaskType) => Task[];
 
-type RemoveTask = (tasks: Task[], name: string) => Task[];
+type RemoveTask = (name: string)=> (tasks: Task[]) => Task[];
 
 type EqTask = (t1: Task) => (t2: Task) => boolean;
 
@@ -26,7 +26,7 @@ export const addTask: AddTask = (tasks, name, type = "Check") =>
 
 export const eqTask: EqTask = (t1) => (t2) => t1.name === t2.name;
 
-export const removeTask: RemoveTask = (tasks, name) =>
+export const removeTask: RemoveTask = (name)=> (tasks) =>
   tasks.filter(not(eqTask({ name, type: "Check" })));
 
 export type TaskLog = {

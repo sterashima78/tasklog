@@ -8,8 +8,8 @@ export type Day = {
 
 type FromDate = (d: Date) => Day
 type ToDate = (d: Day) => Date
-type toString = (d: Day) => string
-
+type ToString = (d: Day) => string
+type FromString = (str: string) => Day
 type Eq = (d1: Day) => (d2: Day) => boolean
 
 type NextDay = (d: Day) => Day
@@ -24,7 +24,17 @@ export const fromDate: FromDate = (d) => ({
 
 export const toDate: ToDate = (d)=> new Date(d.y, d.m - 1, d.d)
 
-export const toString: toString = (d) => {
+export const fromString: FromString = (str)=> {
+  const date = str.split("-").map(x=> parseInt(x, 10))
+  if(date.length < 3 && !isNaN(date[0]) && !isNaN(date[1]) && !isNaN(date[2])) return fromDate(new Date())
+  return {
+    y: date[0],
+    m: date[1],
+    d: date[2]
+  }
+} 
+
+export const toString: ToString = (d) => {
   const dayTemplate = ["日", "月", "火", "水", "木", "金", "土"];
   const day = dayTemplate[toDate(d).getDay()]
   return `${d.y}/${d.m}/${d.d} (${day})`

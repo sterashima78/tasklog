@@ -1,6 +1,7 @@
 const path = require("path")
 module.exports = {
-    alias: {
-      '/@/': path.resolve(__dirname, './src')
-    }
+  base: "/tasklog/",
+  alias: {
+    '/@/': path.resolve(__dirname, './src')
   }
+}
