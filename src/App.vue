@@ -4,13 +4,33 @@
     <hr />
     <router-link to="/task">Task</router-link> |
     <router-link to="/">Home</router-link>
+    <template v-if="isLogin">
+      | <button @click="logout">Logout</button> |
+      <span>[User: {{ user === undefined ? "名無し" : user.name }}]</span>
+    </template>
     <hr />
-    <router-view />
+    <template v-if="isLogin">
+      <router-view />
+    </template>
+    <template v-else>
+      <button @click="login">Login</button>
+    </template>
   </div>
 </template>
 
 <script>
-export default {
+import { defineComponent, onMounted } from "vue";
+import { useAuth } from "/@/compositions/useAuth";
+export default defineComponent({
   name: "App",
-};
+  setup() {
+    const { isLogin, logout, login, user } = useAuth();
+    return {
+      logout,
+      isLogin,
+      login,
+      user,
+    };
+  },
+});
 </script>

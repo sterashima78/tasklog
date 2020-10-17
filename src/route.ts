@@ -1,6 +1,7 @@
 import { RouteLocation } from "vue-router";
 import Index from "./components/pages/Home/index.vue";
 import Task from "./components/pages/Task/index.vue";
+import Login from "./components/pages/Login/index.vue";
 import { fromDate, fromString } from "/@/domain/Day";
 export const routes = [
   {
