@@ -13,10 +13,11 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { useTask } from "/@/compositions/useTask";
+import { storage } from "/@/infrastracture/Task/LocalStorage";
 export default defineComponent({
   setup() {
     const newTask = ref("");
-    const { tasks, addNewTask, removeTask } = useTask();
+    const { tasks, addNewTask, removeTask } = useTask(storage);
     return {
       addNewTask: (name: string) => {
         addNewTask(name);

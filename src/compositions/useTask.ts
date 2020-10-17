@@ -1,37 +1,23 @@
 import { ref, Ref, readonly } from "vue";
-import { addTask, Task, removeTask } from "/@/domain/Task";
-import { fromNullable, map, getOrElse } from "fp-ts/Option";
-import { pipe } from "fp-ts/pipeable";
+import { Task, TaskStorage } from "/@/domain/Task";
 
-const _tasks: Ref<Task[]> = pipe(
-  localStorage.getItem("tasks"),
-  fromNullable,
-  map(JSON.parse),
-  map<Task[], Ref<Task[]>>(ref),
-  getOrElse(() => ref([]) as Ref<Task[]>)
-);
+const _tasks: Ref<Task[]> = ref([])
 
-const addNewTask = (tasks: Ref<Task[]>) => (name: string) => {
+const addNewTask = (storage: TaskStorage, tasks: Ref<Task[]>) => (name: string) => {
   if (name === "") return;
-  pipe(addTask(tasks.value, name, "Check"), (t) => {
-    localStorage.setItem("tasks", JSON.stringify(t));
-    tasks.value = t;
-  });
+  tasks.value = storage.add({name, type: "Check"})
 };
 
-const rmTask = (tasks: Ref<Task[]>) => (name: string) => {
+const rmTask = (storage: TaskStorage, tasks: Ref<Task[]>) => (name: string) => {
   if (name === "") return;
-  pipe(tasks.value, removeTask(name), (t) => {
-    localStorage.setItem("tasks", JSON.stringify(t));
-    tasks.value = t;
-  });
+  tasks.value = storage.remove(name)
 };
 
-export const useTask = () => {
-  const tasks = readonly(_tasks);
+export const useTask = (storage: TaskStorage) => {
+  _tasks.value = storage.get()
   return {
-    removeTask: rmTask(_tasks),
-    addNewTask: addNewTask(_tasks),
-    tasks,
+    removeTask: rmTask(storage, _tasks),
+    addNewTask: addNewTask(storage, _tasks),
+    tasks: readonly(_tasks),
   };
 };

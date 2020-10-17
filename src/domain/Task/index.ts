@@ -2,6 +2,13 @@ import { Day, eq } from "../Day/";
 import { not } from "fp-ts/function";
 import { pipe } from "fp-ts/pipeable";
 import { v4 as uuidv4 } from "uuid";
+
+export type TaskStorage = {
+  get: ()=> Task[];
+  add: (task: Task)=> Task[];
+  remove: (name: string) => Task[];
+}
+
 export type TaskType = "Check";
 
 export type Task = {
@@ -35,6 +42,11 @@ export type TaskLog = {
   task: Task;
   value: any;
 };
+
+export type TaskLogStorage = {
+  get: ()=> TaskLog[];
+  save: (taskLog: TaskLog)=> TaskLog[];
+}
 
 type GetTaskLog = (
   tasks: Readonly<Task[]>,

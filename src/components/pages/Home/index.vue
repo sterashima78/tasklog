@@ -7,7 +7,7 @@
       <li v-for="taskLog in taskLogs" :key="taskLog.task.name">
         <t-switch
           :active="taskLog.value"
-          @update:active="updateLog(taskLog, !taskLog.value)"
+          @update:active="updateLog({...taskLog,value: !taskLog.value})"
         >
           <span>{{ taskLog.task.name }}</span>
         </t-switch>
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, readonly } from "vue";
+import { computed, defineComponent, PropType, ref, readonly, onMounted } from "vue";
 import { fromDate, toString, Day, nextDay, prevDay } from "/@/domain/Day";
 import { fromNullable, map, getOrElse } from "fp-ts/Option";
 import { pipe } from "fp-ts/pipeable";
@@ -25,6 +25,8 @@ import { useTask } from "/@/compositions/useTask";
 import { useTaskLog } from "/@/compositions/useTaskLog";
 import TSwitch from "/@/components/atoms/TSwitch/index.vue";
 import { useRouter } from "vue-router";
+import { storage as taskStorage} from "/@/infrastracture/Task/LocalStorage/index";
+import { storage as taskLogStorage} from "/@/infrastracture/TaskLog/LocalStorage/index";
 export default defineComponent({
   components: {
     TSwitch,
@@ -38,22 +40,17 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter()
-    const { tasks } = useTask();
+    const { tasks } = useTask(taskStorage);
     const dateString = computed(() => pipe(props.date, toString));
-    const { taskLogs, updateLog } = useTaskLog(tasks, computed(()=> props.date));
-    const prevDate = () => {
-      const d = pipe(props.date, prevDay)
-      router.push(`/log/${d.y}-${d.m}-${d.d}`)
-    };
-    const nextDate = () => {
-      const d = pipe(props.date, nextDay)
-      router.push(`/log/${d.y}-${d.m}-${d.d}`)
-    };
+    const { taskLogs, updateLog , refresh} = useTaskLog(taskLogStorage, tasks, computed(()=> props.date));
+    onMounted(refresh)
+    const toPath = (d: Day) => `/log/${d.y}-${d.m}-${d.d}`
+    const navigateDate = (changeDate: (d: Day)=> Day)=> ()=> pipe(props.date, changeDate, toPath, router.push)
     return {
       tasks,
       dateString,
-      prevDate,
-      nextDate,
+      prevDate: navigateDate(prevDay),
+      nextDate: navigateDate(nextDay),
       taskLogs,
       updateLog,
     };
