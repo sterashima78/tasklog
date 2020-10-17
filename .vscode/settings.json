@@ -1,4 +1,7 @@
 {
     "editor.tabSize": 2,
-    "vetur.validation.templateProps": true
+    "vetur.validation.templateProps": true,
+    "vetur.experimental.templateInterpolationService": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
 }
