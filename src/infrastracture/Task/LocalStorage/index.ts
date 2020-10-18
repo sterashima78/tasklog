@@ -4,27 +4,26 @@ import { pipe } from "fp-ts/pipeable";
 
 const TASK_KEY = "tasks";
 
-const set = (tasks: Task[])=> {
-  localStorage.setItem(TASK_KEY, JSON.stringify(tasks))
+const set = (tasks: Task[]) => {
+  localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
   return tasks;
-}
+};
 
 export const storage: TaskStorage = {
-  get: () =>
+  get: async () =>
     pipe(
       localStorage.getItem(TASK_KEY),
       fromNullable,
       map(JSON.parse),
       getOrElse((): Task[] => [])
     ),
-  add: (task)=> pipe(
-    task,
-    ({name, type})=> addTask(storage.get(), name, type),
-    set
-  ),
-  remove: (name: string)=> pipe(
-    storage.get(),
-    removeTask(name),
-    set
-  )
+  add: async (task) =>
+    pipe(task, async ({ name, type }) => {
+      const tasks = await storage.get();
+      return set(addTask(tasks, { id: "", name, type }));
+    }),
+  remove: async (name: string) => {
+    const tasks = await storage.get();
+    return pipe(tasks, removeTask(name), set);
+  },
 };

@@ -19,11 +19,19 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, provide } from "vue";
+import {
+  taskStorage,
+  taskLogStorage,
+  taskStorageKey,
+  taskLogStorageKey,
+} from "./infrastracture";
 import { useAuth } from "/@/compositions/useAuth";
 export default defineComponent({
   name: "App",
   setup() {
+    provide(taskStorageKey, taskStorage);
+    provide(taskLogStorageKey, taskLogStorage);
     const { isLogin, logout, login, user } = useAuth();
     return {
       logout,

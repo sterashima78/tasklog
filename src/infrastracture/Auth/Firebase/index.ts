@@ -1,6 +1,5 @@
 import firebase from "firebase/app";
 import { firebaseApp } from "../../Firebase";
-
 export const _login = (firebaseApp: firebase.app.App) => async () => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -19,10 +18,12 @@ export const _login = (firebaseApp: firebase.app.App) => async () => {
 export const _logout = (firebaseApp: firebase.app.App) => () =>
   firebaseApp.auth().signOut();
 
-export const getUser = () => {
+export const getUser = (): Promise<
+  { name: string; id: string } | undefined
+> => {
   return new Promise<{ name: string; id: string }>((resolve, reject) => {
     setTimeout(() => {
-      reject();
+      reject(undefined);
     }, 5000);
     const unWatch = firebaseApp.auth().onAuthStateChanged((user) => {
       unWatch();
@@ -32,7 +33,7 @@ export const getUser = () => {
           id: user.uid,
         });
       } else {
-        reject();
+        reject(undefined);
       }
     });
   });
