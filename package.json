@@ -6,6 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "firebase": "^7.24.0",
     "fp-ts": "^2.8.4",
     "tailwindcss": "^1.9.3",
     "uuid": "^8.3.1",

@@ -15,19 +15,21 @@ const set = (tasks: TaskLog[]) => {
 };
 
 export const storage: TaskLogStorage = {
-  get: () =>
+  get: async () =>
     pipe(
       localStorage.getItem(TASKLOG_KEY),
       fromNullable,
       map(JSON.parse),
       getOrElse((): TaskLog[] => [])
     ),
-  save: (taskLog) =>
-    pipe(
-      storage.get(),
+  save: async (taskLog) => {
+    const taskLogs = await storage.get();
+    return pipe(
+      taskLogs,
       taskLog.id === undefined
         ? addTaskLog.bind(null, taskLog.task, taskLog.value, taskLog.date)
         : updateTaskLog.bind(null, taskLog.id, taskLog.value),
       set
-    ),
+    );
+  },
 };

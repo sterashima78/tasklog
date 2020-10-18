@@ -4,21 +4,22 @@ import { pipe } from "fp-ts/pipeable";
 import { v4 as uuidv4 } from "uuid";
 
 export type TaskStorage = {
-  get: ()=> Task[];
-  add: (task: Task)=> Task[];
-  remove: (name: string) => Task[];
-}
+  get: () => Promise<Task[]>;
+  add: (task: Task) => Promise<Task[]>;
+  remove: (id: string) => Promise<Task[]>;
+};
 
 export type TaskType = "Check";
 
 export type Task = {
+  id: string | undefined;
   name: string;
   type: TaskType;
 };
 
-type AddTask = (tasks: Task[], name: string, type?: TaskType) => Task[];
+type AddTask = (tasks: Task[], task: Task) => Task[];
 
-type RemoveTask = (name: string)=> (tasks: Task[]) => Task[];
+type RemoveTask = (name: string) => (tasks: Task[]) => Task[];
 
 type EqTask = (t1: Task) => (t2: Task) => boolean;
 
@@ -26,15 +27,13 @@ export type FetchTasks = () => Promise<Task[]>;
 
 export type SaveTasks = (tasks: Task[]) => Promise<Task[]>;
 
-export const addTask: AddTask = (tasks, name, type = "Check") =>
-  tasks.find(eqTask({ name, type: "Check" }))
-    ? tasks
-    : [...tasks, { name, type }];
+export const addTask: AddTask = (tasks, task) =>
+  tasks.find(eqTask(task)) ? tasks : [...tasks, { ...task, id: createId() }];
 
 export const eqTask: EqTask = (t1) => (t2) => t1.name === t2.name;
 
-export const removeTask: RemoveTask = (name)=> (tasks) =>
-  tasks.filter(not(eqTask({ name, type: "Check" })));
+export const removeTask: RemoveTask = (name) => (tasks) =>
+  tasks.filter(not(eqTask({ id: "", name, type: "Check" })));
 
 export type TaskLog = {
   id: string | undefined;
@@ -44,9 +43,9 @@ export type TaskLog = {
 };
 
 export type TaskLogStorage = {
-  get: ()=> TaskLog[];
-  save: (taskLog: TaskLog)=> TaskLog[];
-}
+  get: () => Promise<TaskLog[]>;
+  save: (taskLog: TaskLog) => Promise<TaskLog[]>;
+};
 
 type GetTaskLog = (
   tasks: Readonly<Task[]>,
@@ -75,7 +74,7 @@ export type SaveTaskLogs = (
   tasklogs: Readonly<TaskLog[]>
 ) => Promise<TaskLog[]>;
 
-const createId = () => uuidv4();
+export const createId = () => uuidv4();
 
 export const eqTaskLog: EqTaskLog = (t1) => (t2) =>
   (!!t1.id && !!t2.id && t1.id === t2.id) ||

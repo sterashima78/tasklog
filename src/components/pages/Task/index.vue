@@ -4,18 +4,26 @@
     <input type="text" v-model="newTask" />
     <button @click="addNewTask(newTask)">add</button>
     <div v-for="task in tasks" :key="task.name">
-      <span v-text="task.name" style="margin-right: 1em"/>
-      <button @click="removeTask(task.name)">削除</button>
+      <span v-text="task.name" style="margin-right: 1em" />
+      <button @click="removeTask(task.id || '')">削除</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, inject } from "vue";
 import { useTask } from "/@/compositions/useTask";
-import { storage } from "/@/infrastracture/Task/LocalStorage";
+import {
+  taskStorageKey,
+  taskLogStorageKey,
+  taskStorage,
+} from "/@/infrastracture";
 export default defineComponent({
   setup() {
+    const storage = inject(taskStorageKey);
+    if (storage === undefined) {
+      throw new Error("injection fail");
+    }
     const newTask = ref("");
     const { tasks, addNewTask, removeTask } = useTask(storage);
     return {
@@ -31,6 +39,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
