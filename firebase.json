@@ -1,0 +1,17 @@
+{
+  "firestore": {
+    "rules": "./src/infrastracture/Firebase/firestore.rules",
+    "indexes": "/src/infrastracture/Firebase/firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    }
+  }
+}
