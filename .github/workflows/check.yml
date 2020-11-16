@@ -1,0 +1,29 @@
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "8" # The JDK version to make available on the path.
+          java-package: jre # (jre, jdk, or jdk+fx) - defaults to jdk
+      - name: Cache Node.js modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: npm-v1-${{ hashFiles('**/package-lock.json') }}
+      - name: install
+        if: ${{ steps.cache.outputs.cache-hit }} != 'true'
+        run: npm ci
+      - name: test
+        run: npm run test
