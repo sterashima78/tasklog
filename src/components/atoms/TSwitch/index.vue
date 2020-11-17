@@ -20,6 +20,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: { "update:active": null },
   setup(props, { emit }) {
     return {
       toggle() {
@@ -46,10 +47,9 @@ export default defineComponent({
     height: $switch-button-height;
     width: calc(#{$switch-button-height} * 2);
     border: $switch-button-border-thickness solid $switch-button-color;
-    box-shadow: inset 0px 0px $switch-button-border-thickness 0px
+    box-shadow: inset 0 0 $switch-button-border-thickness 0px
       rgba(0, 0, 0, 0.33);
     border-radius: if($switch-is-rounded, $switch-button-height, 0);
-
     transition: $switch-transition;
 
     $button-side-length: calc(
@@ -64,7 +64,6 @@ export default defineComponent({
       border: $switch-button-border-thickness solid $switch-button-color;
       border-radius: if($switch-is-rounded, $button-side-length, 0);
       background: $switch-button-color;
-
       transition: $switch-transition;
     }
 
@@ -75,7 +74,9 @@ export default defineComponent({
       .button {
         background: white;
         transform: translateX(
-          calc(#{$button-side-length} + (2 *#{$switch-button-border-thickness}))
+          calc(
+            #{$button-side-length} + (2 * #{$switch-button-border-thickness})
+          )
         );
       }
     }

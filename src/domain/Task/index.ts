@@ -119,7 +119,7 @@ export const addTaskLog: AddTaskLog = (task, value, day, taskLogs) => [
 
 export const updateTaskLog: UpdateTaskLog = (logId, value, tasklogs) => {
   const t = tasklogs.find(({ id }) => id === logId);
-  return !!t
+  return t
     ? [
         ...tasklogs.filter(not(eqTaskLog(t))),
         {
