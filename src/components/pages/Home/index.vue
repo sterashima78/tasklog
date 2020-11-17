@@ -17,17 +17,16 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  readonly,
-  onMounted,
-  inject,
-} from "vue";
+import { computed, defineComponent, PropType, onMounted, inject } from "vue";
 import { taskStorageKey, taskLogStorageKey } from "/@/infrastracture";
-import { fromDate, toString, Day, nextDay, prevDay } from "/@/domain/Day";
+import {
+  fromDate,
+  toString,
+  Day,
+  nextDay,
+  prevDay,
+  ChangeDay,
+} from "/@/domain/Day";
 import { pipe } from "fp-ts/pipeable";
 import { useTask } from "/@/compositions/useTask";
 import { useTaskLog } from "/@/compositions/useTaskLog";
@@ -60,7 +59,7 @@ export default defineComponent({
     );
     onMounted(refresh);
     const toPath = (d: Day) => `/log/${d.y}-${d.m}-${d.d}`;
-    const navigateDate = (changeDate: (d: Day) => Day) => () =>
+    const navigateDate = (changeDate: ChangeDay) => () =>
       pipe(props.date, changeDate, toPath, router.push);
     return {
       tasks,
@@ -73,5 +72,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped></style>

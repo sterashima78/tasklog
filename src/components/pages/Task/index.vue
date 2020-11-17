@@ -1,23 +1,19 @@
 <template>
   <div>
     <h2>Task setting</h2>
-    <input type="text" v-model="newTask" />
+    <input v-model="newTask" type="text" />
     <button @click="addNewTask(newTask)">add</button>
     <div v-for="task in tasks" :key="task.name">
-      <span v-text="task.name" style="margin-right: 1em" />
+      <span style="margin-right: 1em" v-text="task.name" />
       <button @click="removeTask(task.id || '')">削除</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, inject } from "vue";
+import { defineComponent, ref, inject } from "vue";
 import { useTask } from "/@/compositions/useTask";
-import {
-  taskStorageKey,
-  taskLogStorageKey,
-  taskStorage,
-} from "/@/infrastracture";
+import { taskStorageKey } from "/@/infrastracture";
 export default defineComponent({
   setup() {
     const storage = inject(taskStorageKey);
@@ -38,5 +34,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped></style>
