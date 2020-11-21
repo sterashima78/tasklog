@@ -23,9 +23,9 @@
     "vue-router": "4.0.0-rc.4"
   },
   "devDependencies": {
-    "@babel/core": "7.12.3",
-    "@babel/preset-env": "7.12.1",
-    "@babel/preset-typescript": "7.12.1",
+    "@babel/core": "7.12.7",
+    "@babel/preset-env": "7.12.7",
+    "@babel/preset-typescript": "7.12.7",
     "@firebase/testing": "0.20.11",
     "@types/jest": "26.0.15",
     "@types/uuid": "8.3.0",
