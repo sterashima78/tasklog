@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import { firebaseApp } from "../../Firebase";
-export const _login = (firebaseApp: firebase.app.App) => async () => {
+import { GetUser, Login, Logout } from "/@/domain/Auth/index";
+export const _login = (firebaseApp: firebase.app.App): Login => async () => {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     const userCredential = await firebaseApp.auth().signInWithPopup(provider);
@@ -15,16 +16,11 @@ export const _login = (firebaseApp: firebase.app.App) => async () => {
     return undefined;
   }
 };
-export const _logout = (firebaseApp: firebase.app.App) => () =>
+export const _logout = (firebaseApp: firebase.app.App): Logout => () =>
   firebaseApp.auth().signOut();
 
-export const getUser = (): Promise<
-  { name: string; id: string } | undefined
-> => {
-  return new Promise<{ name: string; id: string }>((resolve, reject) => {
-    setTimeout(() => {
-      reject(undefined);
-    }, 5000);
+export const getUser: GetUser = () =>
+  new Promise((resolve, reject) => {
     const unWatch = firebaseApp.auth().onAuthStateChanged((user) => {
       unWatch();
       if (user) {
@@ -36,7 +32,11 @@ export const getUser = (): Promise<
         reject(undefined);
       }
     });
+    setTimeout(() => {
+      unWatch();
+      reject(undefined);
+    }, 5000);
   });
-};
+
 export const login = _login(firebaseApp);
 export const logout = _logout(firebaseApp);
