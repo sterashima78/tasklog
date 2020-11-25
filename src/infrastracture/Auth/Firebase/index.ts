@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { firebaseApp } from "../../Firebase";
+import { firebaseApp } from "../../Providers/Firebase";
 import { GetUser, Login, Logout } from "/@/domain/Auth/index";
 export const _login = (firebaseApp: firebase.app.App): Login => async () => {
   try {

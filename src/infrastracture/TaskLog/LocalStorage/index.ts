@@ -4,26 +4,29 @@ import {
   TaskLog,
   updateTaskLog,
 } from "/@/domain/Task";
-import { fromNullable, map, getOrElse } from "fp-ts/Option";
 import { pipe } from "fp-ts/pipeable";
+import { getUser } from "/@/infrastracture/Auth/";
+import {
+  getFromStorage,
+  setStorage,
+} from "/@/infrastracture/Providers/LocalStorage";
 
-const TASKLOG_KEY = "taskLogs";
-
-const set = (tasks: TaskLog[]) => {
-  localStorage.setItem(TASKLOG_KEY, JSON.stringify(tasks));
-  return tasks;
-};
+const set = async (tasks: TaskLog[]) =>
+  getUser().then((info) => {
+    if (info === undefined) return [];
+    setStorage(info.name, "taskLogs", tasks);
+    return tasks;
+  });
 
 export const storage: TaskLogStorage = {
   get: async () =>
-    pipe(
-      localStorage.getItem(TASKLOG_KEY),
-      fromNullable,
-      map(JSON.parse),
-      getOrElse((): TaskLog[] => [])
-    ),
+    getUser().then((info) => {
+      if (info === undefined) return [];
+      return pipe(getFromStorage(info.name), (i) => i.taskLogs || []);
+    }),
   save: async (taskLog) => {
     const taskLogs = await storage.get();
+    console.log(taskLogs);
     return pipe(
       taskLogs,
       taskLog.id === undefined

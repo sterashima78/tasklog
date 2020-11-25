@@ -1,4 +1,4 @@
-import { fireStore } from "/@/infrastracture/Firebase";
+import { fireStore } from "../../Providers/Firebase";
 import { getUser } from "../../Auth/Firebase";
 
 import { TaskStorage, Task, createId } from "/@/domain/Task";

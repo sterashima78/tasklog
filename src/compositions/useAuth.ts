@@ -1,5 +1,5 @@
 import { computed, readonly, Ref, ref } from "vue";
-import { login, logout, getUser } from "../infrastracture/Auth/Firebase";
+import { login, logout, getUser } from "../infrastracture/Auth/";
 export type User = {
   id: string;
   name: string;
