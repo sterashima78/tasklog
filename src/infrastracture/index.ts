@@ -1,8 +1,8 @@
 import { InjectionKey } from "vue";
-import { TaskStorage, TaskLogStorage } from "../domain/Task";
+import { TaskStorage, TaskLogStorage } from "/@/domain/Task";
 
-export { storage as taskStorage } from "./Task/Firebase";
-export { storage as taskLogStorage } from "./TaskLog/Firebase";
+export { taskStorage } from "./Task/";
+export { taskLogStorage } from "./TaskLog/";
 
 export const taskStorageKey: InjectionKey<TaskStorage> = Symbol.for(
   "TaskStorage"

@@ -1,22 +1,24 @@
 import { addTask, Task, TaskStorage, removeTask } from "/@/domain/Task";
-import { fromNullable, map, getOrElse } from "fp-ts/Option";
 import { pipe } from "fp-ts/pipeable";
+import { getUser } from "/@/infrastracture/Auth/";
+import {
+  getFromStorage,
+  setStorage,
+} from "/@/infrastracture/Providers/LocalStorage";
 
-const TASK_KEY = "tasks";
-
-const set = (tasks: Task[]) => {
-  localStorage.setItem(TASK_KEY, JSON.stringify(tasks));
-  return tasks;
-};
+const set = async (tasks: Task[]) =>
+  getUser().then((info) => {
+    if (info === undefined) return [];
+    setStorage(info.name, "tasks", tasks);
+    return tasks;
+  });
 
 export const storage: TaskStorage = {
   get: async () =>
-    pipe(
-      localStorage.getItem(TASK_KEY),
-      fromNullable,
-      map(JSON.parse),
-      getOrElse((): Task[] => [])
-    ),
+    getUser().then((info) => {
+      if (info === undefined) return [];
+      return pipe(getFromStorage(info.name), (i) => i.tasks || []);
+    }),
   add: async (task) =>
     pipe(task, async ({ name, type }) => {
       const tasks = await storage.get();
