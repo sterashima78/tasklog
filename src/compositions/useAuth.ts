@@ -1,9 +1,6 @@
 import { computed, readonly, Ref, ref } from "vue";
 import { login, logout, getUser } from "../infrastracture/Auth/";
-export type User = {
-  id: string;
-  name: string;
-};
+import { User } from "/@/domain/Auth";
 const user: Ref<User | undefined> = ref(undefined);
 getUser()
   .then((u) => (user.value = u))
