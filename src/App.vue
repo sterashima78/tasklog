@@ -1,20 +1,10 @@
 <template>
+  <t-header v-bind="{ isLogin, login, logout, user }"></t-header>
   <div>
-    <h1>Task log</h1>
-    <hr />
-    <router-link to="/task">Task</router-link> |
-    <router-link to="/">Home</router-link>
-    <template v-if="isLogin">
-      | <button @click="logout">Logout</button> |
-      <span>[User: {{ user === undefined ? "名無し" : user.name }}]</span>
-    </template>
-    <hr />
     <template v-if="isLogin">
       <router-view />
     </template>
-    <template v-else>
-      <button @click="login">Login</button>
-    </template>
+    <template v-else>Please Login</template>
   </div>
 </template>
 
@@ -27,8 +17,12 @@ import {
   taskLogStorageKey,
 } from "./infrastracture";
 import { useAuth } from "/@/compositions/useAuth";
+import THeader from "/@/components/organisms/THeader/index.vue";
 export default defineComponent({
   name: "App",
+  components: {
+    THeader,
+  },
   setup() {
     provide(taskStorageKey, taskStorage);
     provide(taskLogStorageKey, taskLogStorage);
