@@ -13,7 +13,7 @@ type Month = Omit<Day, "d">;
 
 type CreateCalendar = (m: Month) => MonthCalendar;
 
-export const createCalendar: CreateCalendar = (m) => {
-  const first = pipe({ ...m, d: 1 }, toDate);
-  const last = pipe({ y: m.y, m: m.m + 1, d: 0 }, toDate);
-};
+// export const createCalendar: CreateCalendar = (m) => {
+//   const first = pipe({ ...m, d: 1 }, toDate);
+//   const last = pipe({ y: m.y, m: m.m + 1, d: 0 }, toDate);
+// };
