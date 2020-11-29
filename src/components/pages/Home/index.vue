@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <div v-text="dateString" />
-    <button @click="prevDate">prev</button>
-    <button @click="nextDate">next</button>
+  <div class="w-full">
+    <div class="flex flex-1 justify-center">
+      <button @click="prevDate">prev</button>
+      <div v-text="dateString" />
+      <button @click="nextDate">next</button>
+    </div>
     <ul>
       <li v-for="taskLog in taskLogs" :key="taskLog.task.name">
         <t-switch
