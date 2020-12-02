@@ -1,18 +1,61 @@
 <template>
-  <div>
-    <div v-text="dateString" />
-    <button @click="prevDate">prev</button>
-    <button @click="nextDate">next</button>
-    <ul>
-      <li v-for="taskLog in taskLogs" :key="taskLog.task.name">
-        <t-switch
-          :active="taskLog.value"
-          @update:active="updateLog({ ...taskLog, value: !taskLog.value })"
+  <div class="w-full flex justify-center">
+    <div class="w-full md:w-2/3 flex-col items-center">
+      <div class="flex justify-center align-center">
+        <button
+          class="mx-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+          @click="prevDate"
         >
-          <span>{{ taskLog.task.name }}</span>
-        </t-switch>
-      </li>
-    </ul>
+          &lt;
+        </button>
+        <div
+          class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700"
+          v-text="dateString"
+        />
+        <button
+          class="mx-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
+          @click="nextDate"
+        >
+          &gt;
+        </button>
+      </div>
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Title
+            </th>
+            <th
+              scope="col"
+              class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr
+            v-for="taskLog in taskLogs"
+            :key="taskLog.task.name"
+            :class="{ 'bg-yellow-200': taskLog.value }"
+          >
+            <td class="px-6 py-4 whitespace-nowrap">{{ taskLog.task.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <t-switch
+                :active="taskLog.value"
+                @update:active="
+                  updateLog({ ...taskLog, value: !taskLog.value })
+                "
+              >
+              </t-switch>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
