@@ -1,10 +1,12 @@
 <template>
-  <div class="switch-button-control">
-    <div class="switch-button" :class="{ enabled: active }" @click="toggle">
-      <div class="button"></div>
-    </div>
-    <div class="switch-button-label">
-      <slot></slot>
+  <div class="w-48 block">
+    <div class="switch-button-control">
+      <div class="switch-button" :class="{ enabled: active }" @click="toggle">
+        <div class="button"></div>
+      </div>
+      <div class="switch-button-label">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
